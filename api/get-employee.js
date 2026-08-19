@@ -29,7 +29,7 @@ export default async function handler(req, res) {
       method: 'POST',
       headers: {
         'Content-Type': 'text/xml; charset=utf-8',
-        'SOAPAction': 'http://tempuri.orgGetEmployeeDetails'
+        'SOAPAction': 'http://tempuri.org/GetEmployeeDetails'
       },
       body: soapEnvelope
     });
