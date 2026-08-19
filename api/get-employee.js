@@ -12,17 +12,18 @@ export default async function handler(req, res) {
   const eBioServerUrl = process.env.ESSL_SERVER_URL; 
 
   // 3. Construct the XML payload exactly as eBioServer expects
+    // 3. Construct the clean XML payload exactly as expected by your strict server
   const soapEnvelope = `<?xml version="1.0" encoding="utf-8"?>
-  <soap:Envelope xmlns:xsi="http://w3.org" xmlns:xsd="http://w3.org" xmlns:soap="http://xmlsoap.org">
-    <soap:Body>
-      <GetEmployeeDetails xmlns="http://tempuri.org">
-        <UserName>${username}</UserName>
-        <Password>${password}</Password>
-        <EmployeeCode>${employeeCode}</EmployeeCode>
-      </GetEmployeeDetails>
-    </soap:Body>
-  </soap:Envelope>`;
-
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <GetEmployeeDetails xmlns="http://tempuri.org">
+      <UserName>${username}</UserName>
+      <Password>${password}</Password>
+      <EmployeeCode>${employeeCode}</EmployeeCode>
+    </GetEmployeeDetails>
+  </soap:Body>
+</soap:Envelope>`.trim();
+  
   try {
     // 4. Send the request securely from Vercel to your eBioServer
     const response = await fetch(eBioServerUrl, {
