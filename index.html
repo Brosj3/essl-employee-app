@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eSSL Employee Fetcher</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f4f7f6; }
+        .container { max-width: 500px; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        input, button { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { background: #0070f3; color: white; border: none; cursor: pointer; font-weight: bold; }
+        button:hover { background: #0051a8; }
+        pre { background: #eee; padding: 15px; border-radius: 4px; overflow-x: auto; max-height: 250px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>eSSL Employee Lookup</h2>
+    <label for="empCode">Enter Employee Code:</label>
+    <input type="text" id="empCode" placeholder="e.g., EMP001">
+    <button onclick="fetchEmployee()">Fetch Details</button>
+
+    <h3>Result:</h3>
+    <pre id="output">Results will appear here...</pre>
+</div>
+
+<script>
+async function fetchEmployee() {
+    const empCode = document.getElementById('empCode').value;
+    const outputElement = document.getElementById('output');
+    
+    if (!empCode) {
+        alert('Please enter an employee code');
+        return;
+    }
+
+    outputElement.textContent = "Loading...";
+
+    try {
+        // Points directly to your Vercel backend function
+        const response = await fetch('/api/get-employee', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ employeeCode: empCode })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            // Displays the raw XML layout from eBioServer
+            outputElement.textContent = result.data;
+        } else {
+            outputElement.textContent = "Error: " + (result.error || "Unknown error");
+        }
+    } catch (err) {
+        outputElement.textContent = "Network Error: " + err.message;
+    }
+}
+</script>
+
+</body>
+</html>
+
